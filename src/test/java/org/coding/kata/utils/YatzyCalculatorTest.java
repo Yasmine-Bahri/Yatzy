@@ -1,297 +1,148 @@
 package org.coding.kata.utils;
 
-import org.junit.jupiter.api.Test;
+import org.coding.kata.enumeration.YatzyCategory;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.coding.kata.enumeration.YatzyCategory.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class YatzyCalculatorTest {
 
-    @Test
-    public void should_chance_return_scoresSumAllDice_when_categoryIsChance() {
-        //given
-        int expected = 15;
-        int[] dices = {2,3,4,5,1};
-        //when
+    static Stream<Arguments> chanceTestsProvider() {
+        return Stream.of(
+                Arguments.of(15, new int[]{2, 3, 4, 5, 1})
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("chanceTestsProvider")
+    public void should_chance_return_scoresSumAllDice_when_categoryIsChance(int expected, int[] dices) {
         int result = YatzyCalculator.chance(dices);
-        //then
         assertEquals(expected, result);
     }
 
-    @Test
-    public void should_yatzy_return_fiftyAsScore_when_categoryIsYatzyAndDicesAllSame() {
-        //given
-        int expected = 50;
-        int[] dices = {4,4,4,4,4};
-        //when
+    static Stream<Arguments> yatzyTestsProvider() {
+        return Stream.of(
+                Arguments.of(50, new int[]{4, 4, 4, 4, 4}), // all same
+                Arguments.of(0, new int[]{4, 4, 1, 4, 4}) // not all same
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("yatzyTestsProvider")
+    public void should_yatzy_return_score_based_on_dices(int expected, int[] dices) {
         int result = YatzyCalculator.yatzy(dices);
-        //then
         assertEquals(expected, result);
     }
 
-    @Test
-    public void should_yatzy_return_zeroAsScore_when_categoryIsYatzyAndDicesAllNotSame() {
-        //given
-        int expected = 0;
-        int[] dices = {4,4,1,4,4};
-        //when
-        int result = YatzyCalculator.yatzy(dices);
-        //then
+    static Stream<Arguments> oneToSixesTestsProvider() {
+        return Stream.of(
+                Arguments.of(4, new int[]{1, 2, 1, 1, 1}, ONES),
+                Arguments.of(0, new int[]{3, 2, 3, 4, 6}, ONES),
+                Arguments.of(6, new int[]{1, 2, 2, 6, 2}, TWOS),
+                Arguments.of(0, new int[]{3, 6, 1, 4, 6}, TWOS),
+                Arguments.of(6, new int[]{2, 3, 1, 3, 4}, THREES),
+                Arguments.of(0, new int[]{2, 2, 5, 4, 6}, THREES),
+                Arguments.of(8, new int[]{4, 2, 1, 4, 1}, FOURS),
+                Arguments.of(0, new int[]{3, 2, 3, 1, 6}, FOURS),
+                Arguments.of(15, new int[]{5, 2, 5, 1, 5}, FIVES),
+                Arguments.of(0, new int[]{3, 2, 3, 4, 6}, FIVES),
+                Arguments.of(18, new int[]{1, 6, 1, 6, 6}, SIXES),
+                Arguments.of(0, new int[]{3, 2, 3, 4, 5}, SIXES)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("oneToSixesTestsProvider")
+    public void should_oneToSixesCategory_return_sum_based_on_dices(int expected, int[] dices, YatzyCategory category) {
+        int result = YatzyCalculator.oneToSixesCategory(category, dices);
         assertEquals(expected, result);
     }
 
-
-    @Test
-    public void should_oneToSixesCategory_return_sumOfOnes_when_categoryIsOnes() {
-        //given
-        int expected = 4;
-        int[] dices = {1,2,1,1,1};
-        //when
-        int result = YatzyCalculator.oneToSixesCategory(ONES,dices);
-        //then
-        assertEquals(expected, result);
+    static Stream<Arguments> pairTestsProvider() {
+        return Stream.of(
+                Arguments.of(12, new int[]{5, 3, 6, 6, 5})
+        );
     }
 
-    @Test
-    public void should_oneToSixesCategory_return_zero_when_categoryIsOnesAndDicesNotContainOnes() {
-        //given
-        int expected = 0;
-        int[] dices = {3,2,3,4,6};
-        //when
-        int result = YatzyCalculator.oneToSixesCategory(ONES,dices);
-        //then
-        assertEquals(expected, result);
-    }
-
-    @Test
-    public void should_oneToSixesCategory_return_sumOfOnes_when_categoryIsTwos() {
-        //given
-        int expected = 6;
-        int[] dices = {1,2,2,6,2};
-        //when
-        int result = YatzyCalculator.oneToSixesCategory(TWOS,dices);
-        //then
-        assertEquals(expected, result);
-    }
-
-    @Test
-    public void should_oneToSixesCategory_return_zero_when_categoryIsTwosAndDicesNotContainTwos() {
-        //given
-        int expected = 0;
-        int[] dices = {3,6,1,4,6};
-        //when
-        int result = YatzyCalculator.oneToSixesCategory(TWOS,dices);
-        //then
-        assertEquals(expected, result);
-    }
-
-    @Test
-    public void should_oneToSixesCategory_return_sumOfThrees_when_categoryIsThrees() {
-        //given
-        int expected = 6;
-        int[] dices = {2,3,1,3,4};
-        //when
-        int result = YatzyCalculator.oneToSixesCategory(THREES,dices);
-        //then
-        assertEquals(expected, result);
-    }
-
-    @Test
-    public void should_oneToSixesCategory_return_zero_when_categoryIsThreesAndDicesNotContainThrees() {
-        //given
-        int expected = 0;
-        int[] dices = {2,2,5,4,6};
-        //when
-        int result = YatzyCalculator.oneToSixesCategory(THREES,dices);
-        //then
-        assertEquals(expected, result);
-    }
-
-    @Test
-    public void should_oneToSixesCategory_return_sumOfFours_when_categoryIsFours() {
-        //given
-        int expected = 8;
-        int[] dices = {4,2,1,4,1};
-        //when
-        int result = YatzyCalculator.oneToSixesCategory(FOURS,dices);
-        //then
-        assertEquals(expected, result);
-    }
-
-    @Test
-    public void should_oneToSixesCategory_return_zero_when_categoryIsFoursAndDicesNotContainFours() {
-        //given
-        int expected = 0;
-        int[] dices = {3,2,3,1,6};
-        //when
-        int result = YatzyCalculator.oneToSixesCategory(FOURS,dices);
-        //then
-        assertEquals(expected, result);
-    }
-
-    @Test
-    public void should_oneToSixesCategory_return_sumOfFives_when_categoryIsFives() {
-        //given
-        int expected = 15;
-        int[] dices = {5,2,5,1,5};
-        //when
-        int result = YatzyCalculator.oneToSixesCategory(FIVES,dices);
-        //then
-        assertEquals(expected, result);
-    }
-
-    @Test
-    public void should_oneToSixesCategory_return_zero_when_categoryIsFivesAndDicesNotContainFives() {
-        //given
-        int expected = 0;
-        int[] dices = {3,2,3,4,6};
-        //when
-        int result = YatzyCalculator.oneToSixesCategory(FIVES,dices);
-        //then
-        assertEquals(expected, result);
-    }
-
-    @Test
-    public void should_oneToSixesCategory_return_sumOfSixes_when_categoryIsSixes() {
-        //given
-        int expected = 18;
-        int[] dices = {1,6,1,6,6};
-        //when
-        int result = YatzyCalculator.oneToSixesCategory(SIXES,dices);
-        //then
-        assertEquals(expected, result);
-    }
-
-    @Test
-    public void should_oneToSixesCategory_return_zero_when_categoryIsSixesAndDicesNotContainSixes() {
-        //given
-        int expected = 0;
-        int[] dices = {3,2,3,4,5};
-        //when
-        int result = YatzyCalculator.oneToSixesCategory(SIXES,dices);
-        //then
-        assertEquals(expected, result);
-    }
-
-    @Test
-    public void should_pair_return_scoreSum_when_categoryIsPair() {
-        //given
-        int expected = 12;
-        int[] dices = {5,3,6,6,5};
-        //when
+    @ParameterizedTest
+    @MethodSource("pairTestsProvider")
+    public void should_pair_return_scoreSum_when_categoryIsPair(int expected, int[] dices) {
         int result = YatzyCalculator.pair(dices);
-        //then
         assertEquals(expected, result);
     }
 
-    @Test
-    public void should_twoPair_return_scoreSum_when_categoryIsTwoPair() {
-        //given
-        int expected = 16;
-        int[] dices = {3,3,5,5,5};
-        //when
+    static Stream<Arguments> twoPairTestsProvider() {
+        return Stream.of(
+                Arguments.of(16, new int[]{3, 3, 5, 5, 5})
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("twoPairTestsProvider")
+    public void should_twoPair_return_scoreSum_when_categoryIsTwoPair(int expected, int[] dices) {
         int result = YatzyCalculator.twoPair(dices);
-        //then
         assertEquals(expected, result);
     }
 
-    @Test
-    public void should_threeOrFourOfKind_return_scoreSum_when_categoryIsThreeOfKind() {
-        //given
-        int expected = 15;
-        int[] dices = {5,3,5,2,5};
-        //when
-        int result = YatzyCalculator.threeOrFourOfKind(THREE_OF_A_KIND, dices);
-        //then
+    static Stream<Arguments> threeOrFourOfKindTestsProvider() {
+        return Stream.of(
+                Arguments.of(15, new int[]{5, 3, 5, 2, 5}, THREE_OF_A_KIND),
+                Arguments.of(0, new int[]{6, 3, 5, 2, 5}, THREE_OF_A_KIND),
+                Arguments.of(20, new int[]{5, 5, 5, 2, 5}, FOUR_OF_A_KIND)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("threeOrFourOfKindTestsProvider")
+    void should_threeOrFourOfKind_return_scoreSum_based_on_dices(int expected, int[] dices, YatzyCategory category) {
+        int result = YatzyCalculator.threeOrFourOfKind(category, dices);
         assertEquals(expected, result);
     }
 
-    @Test
-    public void should_threeOrFourOfKind_return_zeroAsScoreSum_when_categoryIsThreeOfKind() {
-        //given
-        int expected = 0;
-        int[] dices = {6,3,5,2,5};
-        //when
-        int result = YatzyCalculator.threeOrFourOfKind(THREE_OF_A_KIND, dices);
-        //then
-        assertEquals(expected, result);
+    static Stream<Arguments> smallStraightTestsProvider() {
+        return Stream.of(
+                Arguments.of(15, new int[]{1, 2, 3, 4, 5}),
+                Arguments.of(0, new int[]{1, 6, 3, 4, 5})
+        );
     }
 
-    @Test
-    public void should_threeOrFourOfKind_return_scoreSum_when_categoryIsFourOfKind() {
-        //given
-        int expected = 20;
-        int[] dices = {5,5,5,2,5};
-        //when
-        int result = YatzyCalculator.threeOrFourOfKind(FOUR_OF_A_KIND, dices);
-        //then
-        assertEquals(expected, result);
-    }
-
-    @Test
-    public void should_smallStraight_return_scoreSum_when_allDicesAreSmallStraight() {
-        //given
-        int expected = 15;
-        int[] dices = {1,2,3,4,5};
-        //when
+    @ParameterizedTest
+    @MethodSource("smallStraightTestsProvider")
+    void should_smallStraight_return_scoreSum_based_on_dices(int expected, int[] dices) {
         int result = YatzyCalculator.smallStraight(dices);
-        //then
         assertEquals(expected, result);
     }
 
-    @Test
-    public void should_smallStraight_return_zeroAsScoreSum_when_allDicesAreNotSmallStraight() {
-        //given
-        int expected = 0;
-        int[] dices = {1,6,3,4,5};
-        //when
-        int result = YatzyCalculator.smallStraight(dices);
-        //then
-        assertEquals(expected, result);
+    static Stream<Arguments> largeStraightTestsProvider() {
+        return Stream.of(
+                Arguments.of(20, new int[]{2, 3, 4, 5, 6}),
+                Arguments.of(0, new int[]{2, 3, 4, 5, 2})
+        );
     }
 
-    @Test
-    public void should_largeStraight_return_scoreSum_when_allDicesAreLargeStraight() {
-        //given
-        int expected = 20;
-        int[] dices = {2,3,4,5,6};
-        //when
+    @ParameterizedTest
+    @MethodSource("largeStraightTestsProvider")
+    void should_largeStraight_return_scoreSum_based_on_dices(int expected, int[] dices) {
         int result = YatzyCalculator.largeStraight(dices);
-        //then
         assertEquals(expected, result);
     }
 
-    @Test
-    public void should_largeStraight_return_zeroAsScoreSum_when_allDicesAreNotLargeStraight() {
-        //given
-        int expected = 0;
-        int[] dices = {2,3,4,5,2};
-        //when
-        int result = YatzyCalculator.largeStraight(dices);
-        //then
-        assertEquals(expected, result);
+    static Stream<Arguments> fullHouseTestsProvider() {
+        return Stream.of(
+                Arguments.of(18, new int[]{6, 2, 2, 2, 6}),
+                Arguments.of(0, new int[]{2, 3, 4, 5, 6})
+        );
     }
 
-    @Test
-    public void should_fullHouse_return_scoreSum_when_allDicesAreFullHouse() {
-        //given
-        int expected = 18;
-        int[] dices = {6,2,2,2,6};
-        //when
+    @ParameterizedTest
+    @MethodSource("fullHouseTestsProvider")
+    void should_fullHouse_return_scoreSum_based_on_dices(int expected, int[] dices) {
         int result = YatzyCalculator.fullHouse(dices);
-        //then
         assertEquals(expected, result);
     }
-
-    @Test
-    public void should_fullHouse_return_zeroAsScoreSum_when_allDicesAreFullHouse() {
-        //given
-        int expected = 0;
-        int[] dices = {2,3,4,5,6};
-        //when
-        int result = YatzyCalculator.fullHouse(dices);
-        //then
-        assertEquals(expected, result);
-    }
-
 }
