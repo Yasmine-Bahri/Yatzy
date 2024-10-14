@@ -7,8 +7,16 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import static org.coding.kata.enumeration.YatzyCategory.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.coding.kata.enumeration.YatzyCategory.FIVES;
+import static org.coding.kata.enumeration.YatzyCategory.FOURS;
+import static org.coding.kata.enumeration.YatzyCategory.FOUR_OF_A_KIND;
+import static org.coding.kata.enumeration.YatzyCategory.ONES;
+import static org.coding.kata.enumeration.YatzyCategory.SIXES;
+import static org.coding.kata.enumeration.YatzyCategory.THREES;
+import static org.coding.kata.enumeration.YatzyCategory.THREE_OF_A_KIND;
+import static org.coding.kata.enumeration.YatzyCategory.TWOS;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 class YatzyCalculatorTest {
 
@@ -27,8 +35,8 @@ class YatzyCalculatorTest {
 
     static Stream<Arguments> yatzyTestsProvider() {
         return Stream.of(
-                Arguments.of(50, new int[]{4, 4, 4, 4, 4}), // all same
-                Arguments.of(0, new int[]{4, 4, 1, 4, 4}) // not all same
+                Arguments.of(50, new int[]{4, 4, 4, 4, 4}),
+                Arguments.of(0, new int[]{4, 4, 1, 4, 4})
         );
     }
 
@@ -93,6 +101,7 @@ class YatzyCalculatorTest {
         return Stream.of(
                 Arguments.of(15, new int[]{5, 3, 5, 2, 5}, THREE_OF_A_KIND),
                 Arguments.of(0, new int[]{6, 3, 5, 2, 5}, THREE_OF_A_KIND),
+                Arguments.of(0, new int[]{6, 5, 5, 2, 5}, FOUR_OF_A_KIND),
                 Arguments.of(20, new int[]{5, 5, 5, 2, 5}, FOUR_OF_A_KIND)
         );
     }

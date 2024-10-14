@@ -2,7 +2,6 @@ package org.coding.kata.utils;
 
 import org.coding.kata.enumeration.YatzyCategory;
 
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.coding.kata.enumeration.YatzyCategory.*;
+import static org.coding.kata.enumeration.YatzyCategory.FULL_HOUSE;
+import static org.coding.kata.enumeration.YatzyCategory.LARGE_STRAIGHT;
+import static org.coding.kata.enumeration.YatzyCategory.SMALL_STRAIGHT;
 import static org.coding.kata.utils.Util.tabToList;
 
 public class YatzyCalculator {
@@ -137,7 +138,7 @@ public class YatzyCalculator {
 
     private static int calculateSmallLargeStraight(YatzyCategory category, int... dices) {
         Set<Integer> diceSet = new HashSet<>(tabToList(dices));
-        Set<Integer> requiredValues = category == YatzyCategory.SMALL_STRAIGHT
+        Set<Integer> requiredValues = category == SMALL_STRAIGHT
                 ? Set.of(1, 2, 3, 4, 5)
                 : Set.of(2, 3, 4, 5, 6);
 
