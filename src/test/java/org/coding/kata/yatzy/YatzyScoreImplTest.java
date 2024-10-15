@@ -18,7 +18,7 @@ class YatzyScoreImplTest {
         yatzyScore = new YatzyScoreImpl();
     }
 
-    static Stream<Arguments> scoreTestProvider() {
+    static Stream<Arguments> scoreDataProvider() {
         return Stream.of(
                 Arguments.of(12, new int[]{4, 2, 1, 4, 1}, "CHANCE"),
                 Arguments.of(50, new int[]{4, 4, 4, 4, 4}, "YATZY"),
@@ -39,8 +39,8 @@ class YatzyScoreImplTest {
     }
 
     @ParameterizedTest
-    @MethodSource("scoreTestProvider")
-    void should_score_return_calculatedScoreOfRoll(int expected, int[] dices, String categoryName) {
+    @MethodSource("scoreDataProvider")
+    void should_score_return_calculatedScoreOfRoll_when_categoryIsValid(int expected, int[] dices, String categoryName) {
         // when
         int result = yatzyScore.score(categoryName, dices);
         // then

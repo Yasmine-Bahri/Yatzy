@@ -75,13 +75,20 @@ public class YatzyCalculator {
      */
     public static int twoPair(int... dices) {
         List<Integer> list = tabToList(dices);
-        return list.stream()
-            .collect(Collectors.groupingBy(n -> n, Collectors.counting()))
-            .entrySet().stream()
-            .filter(entry -> entry.getValue() >= 2)
-            .map(entry -> entry.getValue() != 3 ? entry.getKey() * entry.getValue() : entry.getKey()* 2)
-            .mapToInt(Long::intValue)
-            .sum();
+        // Count occurrences
+        Map<Integer, Long> diceCountMap = list.stream()
+                .collect(Collectors.groupingBy(die -> die, Collectors.counting()));
+        long pairsCount = diceCountMap.entrySet().stream()
+                .filter(entry -> entry.getValue() >= 2)
+                .count();
+        if (pairsCount >= 2) {
+            return diceCountMap.entrySet().stream()
+                    .filter(entry -> entry.getValue() >= 2)
+                    .map(entry -> entry.getKey() * 2)
+                    .mapToInt(Integer::intValue).sum();
+        }
+
+        return 0;
     }
 
     /**
